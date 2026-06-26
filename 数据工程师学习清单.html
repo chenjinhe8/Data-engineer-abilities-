@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数据工程师学习清单</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif; background: #F5F4F0; color: #1a1a1a; min-height: 100vh; padding: 2rem 1rem 4rem; }
+  .container { max-width: 780px; margin: 0 auto; }
+
+  h1 { font-size: 22px; font-weight: 600; color: #111; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #888; margin-bottom: 1.5rem; }
+
+  /* Summary bar */
+  .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.5rem; }
+  .summary-card { background: #fff; border: 0.5px solid #e0ddd5; border-radius: 12px; padding: 12px 16px; text-align: center; }
+  .summary-num { font-size: 24px; font-weight: 600; color: #111; }
+  .summary-lbl { font-size: 11px; color: #999; margin-top: 2px; }
+
+  /* Overall progress bar */
+  .overall-bar-wrap { background: #fff; border: 0.5px solid #e0ddd5; border-radius: 12px; padding: 14px 18px; margin-bottom: 1.5rem; }
+  .overall-bar-label { display: flex; justify-content: space-between; font-size: 12px; color: #888; margin-bottom: 8px; }
+  .bar-track { height: 8px; background: #eeecea; border-radius: 99px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #4B6BFB, #7C3AED); transition: width 0.4s ease; }
+
+  /* Part block */
+  .part { background: #fff; border: 0.5px solid #e0ddd5; border-radius: 14px; margin-bottom: 14px; overflow: hidden; }
+  .part-header { display: flex; align-items: center; gap: 12px; padding: 14px 18px; cursor: pointer; user-select: none; transition: background 0.15s; }
+  .part-header:hover { background: #faf9f7; }
+  .part-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .part-meta { flex: 1; }
+  .part-meta h2 { font-size: 15px; font-weight: 600; color: #111; }
+  .part-meta p { font-size: 12px; color: #aaa; margin-top: 2px; }
+  .part-right { display: flex; align-items: center; gap: 10px; }
+  .mini-bar-track { width: 70px; height: 5px; background: #eeecea; border-radius: 99px; overflow: hidden; }
+  .mini-bar-fill { height: 100%; border-radius: 99px; transition: width 0.3s; }
+  .mini-pct { font-size: 11px; color: #bbb; min-width: 32px; text-align: right; }
+  .chevron { font-size: 12px; color: #ccc; transition: transform 0.25s; display: inline-block; }
+  .chevron.open { transform: rotate(180deg); }
+
+  /* Items panel */
+  .part-body { display: none; border-top: 0.5px solid #f0ede7; }
+  .part-body.open { display: block; }
+  .category-label { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; color: #aaa; padding: 10px 18px 6px; background: #faf9f7; text-transform: uppercase; border-bottom: 0.5px solid #f0ede7; }
+  .item { display: flex; align-items: flex-start; gap: 12px; padding: 11px 18px; border-bottom: 0.5px solid #f5f3ef; cursor: pointer; transition: background 0.1s; }
+  .item:last-child { border-bottom: none; }
+  .item:hover { background: #faf9f7; }
+  .cb { width: 19px; height: 19px; border-radius: 6px; border: 1.5px solid #d5d2ca; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; background: #fff; }
+  .cb.checked { border-color: transparent; }
+  .cb svg { display: none; }
+  .cb.checked svg { display: block; }
+  .item-text { font-size: 13px; color: #222; line-height: 1.55; flex: 1; transition: color 0.2s; }
+  .item-text.done { color: #bbb; text-decoration: line-through; }
+  .tag { font-size: 10px; padding: 2px 8px; border-radius: 99px; flex-shrink: 0; margin-top: 2px; font-weight: 600; white-space: nowrap; }
+
+  /* Legend */
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #777; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 99px; }
+
+  /* Doc links */
+  .doc-links { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 1.5rem; }
+  .doc-link { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #fff; border: 0.5px solid #e0ddd5; border-radius: 12px; text-decoration: none; transition: all 0.15s; }
+  .doc-link:hover { border-color: #bbb; background: #faf9f7; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .doc-link-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+  .doc-link-text { flex: 1; min-width: 0; }
+  .doc-link-title { font-size: 12px; font-weight: 600; color: #222; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .doc-link-sub { font-size: 11px; color: #aaa; margin-top: 1px; }
+  .doc-link-arrow { font-size: 12px; color: #ccc; flex-shrink: 0; }
+
+  /* Reset button */
+  .reset-btn { margin-top: 2rem; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #bbb; background: none; border: 0.5px solid #ddd; border-radius: 8px; padding: 6px 14px; cursor: pointer; transition: all 0.15s; }
+  .reset-btn:hover { color: #888; border-color: #bbb; }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .part-body { display: block !important; }
+    .chevron, .reset-btn { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>📚 数据工程师学习清单</h1>
+  <p class="subtitle">勾选完成的内容，进度自动保存到本地浏览器 · 可打印</p>
+
+  <div class="doc-links">
+    <a class="doc-link" href="https://docs.google.com/document/d/1myCV80FdV1WNBax6jbQGAZqxxdLuPmAFgBRl5401d3o/edit" target="_blank">
+      <div class="doc-link-icon" style="background:#EEF2FF;">🗄️</div>
+      <div class="doc-link-text"><div class="doc-link-title">Part 1 · 数据建模</div><div class="doc-link-sub">Google Docs</div></div>
+      <span class="doc-link-arrow">↗</span>
+    </a>
+    <a class="doc-link" href="https://docs.google.com/document/d/1FsJ96JPM1pHI3cKtCxSGM3XoPtvklirCR2xj1YNpglQ/edit" target="_blank">
+      <div class="doc-link-icon" style="background:#ECFEFF;">🔄</div>
+      <div class="doc-link-text"><div class="doc-link-title">Part 2 · ETL 与数据管道</div><div class="doc-link-sub">Google Docs</div></div>
+      <span class="doc-link-arrow">↗</span>
+    </a>
+    <a class="doc-link" href="https://docs.google.com/document/d/1aHgp4BEMOy02ijmtYXMie7Www_SzEwYQi_TO9rym0s0/edit" target="_blank">
+      <div class="doc-link-icon" style="background:#ECFDF5;">🛡️</div>
+      <div class="doc-link-text"><div class="doc-link-title">Part 3 · 数据治理</div><div class="doc-link-sub">Google Docs</div></div>
+      <span class="doc-link-arrow">↗</span>
+    </a>
+    <a class="doc-link" href="https://docs.google.com/document/d/1N_SRSuqrjchgp-QaPUP0zIepopEWCSLeFTrWJsLBVPY/edit" target="_blank">
+      <div class="doc-link-icon" style="background:#F5F3FF;">🤖</div>
+      <div class="doc-link-text"><div class="doc-link-title">Part 4 · 数据 + AI</div><div class="doc-link-sub">Google Docs</div></div>
+      <span class="doc-link-arrow">↗</span>
+    </a>
+  </div>
+
+  <div class="summary">
+    <div class="summary-card"><div class="summary-num" id="s-done">0</div><div class="summary-lbl">已完成</div></div>
+    <div class="summary-card"><div class="summary-num" id="s-total">0</div><div class="summary-lbl">总项目</div></div>
+    <div class="summary-card"><div class="summary-num" id="s-pct">0%</div><div class="summary-lbl">整体进度</div></div>
+  </div>
+
+  <div class="overall-bar-wrap">
+    <div class="overall-bar-label"><span>整体进度</span><span id="bar-pct-lbl">0%</span></div>
+    <div class="bar-track"><div class="bar-fill" id="overall-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="legend">
+    <span style="font-size:11px;color:#999;margin-right:4px;">标签说明：</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#4B6BFB"></span>必学</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#7C3AED"></span>进阶</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#059669"></span>推荐</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#D97706"></span>加分</span>
+  </div>
+
+  <div id="root"></div>
+
+  <button class="reset-btn" onclick="resetAll()">↺ 重置所有进度</button>
+</div>
+
+<script>
+const PARTS = [
+  {
+    id: "p1", icon: "🗄️", color: "#4B6BFB", bg: "#EEF2FF", barColor: "#4B6BFB",
+    title: "Part 1 · 数据建模", sub: "Data Modeling",
+    cats: [
+      { name: "Schema 设计", items: [
+        { text: "星型模式（Star Schema）：事实表与维度表的设计原则", tag: "必学", tc: "#4B6BFB", tb: "#EEF2FF" },
+        { text: "雪花模式（Snowflake Schema）：维度规范化及适用场景", tag: "必学", tc: "#4B6BFB", tb: "#EEF2FF" },
+        { text: "范式（1NF / 2NF / 3NF）vs 反范式：何时选择哪种策略", tag: "必学", tc: "#4B6BFB", tb: "#EEF2FF" },
+        { text: "Wide table / Flat table 的 BI 场景应用", tag: "进阶", tc: "#7C3AED", tb: "#F5F3FF" },
+      ]},
+      { name: "数据分层与 SSOT", items: [
+        { text: "数仓分层理念：ODS → DWD → DWS → ADS，以及 Medallion（Bronze / Silver / Gold）架构", tag: "必学", tc: "#4B6BFB", tb: "#EEF2FF" },
+        { text: "SSOT（单一真相来源）的设计原则与落地实践", tag: "必学", tc: "#4B6BFB", tb: "#EEF2FF" },
+        { text: "缓慢变化维（SCD Type 1 / 2 / 3）的建模方式与选型", tag: "必学", tc: "#4B6BFB", tb: "#EEF2FF" },
+        { text: "数据域划分与业务主题建模（Subject Area）", tag: "进阶", tc: "#7C3AED", tb: "#F5F3FF" },
+      ]},
+      { name: "工具与文档", items: [
+        { text: "dbt：模型开发、测试、文档生成一体化工作流", tag: "必学", tc: "#4B6BFB", tb: "#EEF2FF" },
+        { text: "ERD 图工具（dbdiagram.io / Lucidchart）绘制数据模型", tag: "推荐", tc: "#059669", tb: "#ECFDF5" },
+        { text: "数据字典的编写规范与维护方式", tag: "推荐", tc: "#059669", tb: "#ECFDF5" },
+      ]},
+    ]
+  },
+  {
+    id: "p2", icon: "🔄", color: "#0891B2", bg: "#ECFEFF", barColor: "#0891B2",
+    title: "Part 2 · ETL 与数据管道", sub: "ETL & Pipeline Management（Spark + Hive 技术栈）",
+    cats: [
+      { name: "批处理（Batch）— Spark + Hive", items: [
+        { text: "HiveQL 批量抽取与加载：INSERT OVERWRITE、MERGE INTO（Hive 3.x）策略", tag: "必学", tc: "#0891B2", tb: "#ECFEFF" },
+        { text: "增量抽取：基于时间戳、Hive 分区裁剪、CDC（Change Data Capture）与 Watermark 机制", tag: "必学", tc: "#0891B2", tb: "#ECFEFF" },
+        { text: "Spark on Hive：SparkSession 对接 Hive Metastore、读写 Hive 表、分区操作", tag: "必学", tc: "#0891B2", tb: "#ECFEFF" },
+        { text: "Hive 存储格式选型：ORC vs Parquet，压缩编码（Snappy / ZSTD）与列式存储原理", tag: "必学", tc: "#0891B2", tb: "#ECFEFF" },
+        { text: "调度工具：Apache Airflow 的 DAG 编写、依赖管理、SparkSubmitOperator 使用", tag: "必学", tc: "#0891B2", tb: "#ECFEFF" },
+      ]},
+      { name: "流处理（Streaming）", items: [
+        { text: "消息队列：Kafka 的生产者 / 消费者模型、Topic 分区、Offset 管理", tag: "必学", tc: "#0891B2", tb: "#ECFEFF" },
+        { text: "Spark Structured Streaming：读取 Kafka 流写入 Hive / ORC，Watermark 与窗口函数", tag: "进阶", tc: "#7C3AED", tb: "#F5F3FF" },
+        { text: "Exactly-once / At-least-once 语义的理解与在 Spark + Kafka 场景下的应用", tag: "进阶", tc: "#7C3AED", tb: "#F5F3FF" },
+      ]},
+      { name: "数据质量与排查", items: [
+        { text: "数据血缘（Data Lineage）追踪：Apache Atlas 与 Hive Hook 集成", tag: "必学", tc: "#0891B2", tb: "#ECFEFF" },
+        { text: "管道监控与告警：SLA 监控、Spark History Server、异常检测与补数策略", tag: "必学", tc: "#0891B2", tb: "#ECFEFF" },
+        { text: "分布式系统下的数据一致性：幂等性设计、去重、跨数据中心迁移策略", tag: "加分", tc: "#D97706", tb: "#FFFBEB" },
+      ]},
+    ]
+  },
+  {
+    id: "p3", icon: "🛡️", color: "#059669", bg: "#ECFDF5", barColor: "#059669",
+    title: "Part 3 · 数据治理", sub: "Data Governance",
+    cats: [
+      { name: "六大核心支柱（需至少掌握 2-3 项）", items: [
+        { text: "数据质量（Data Quality）：完整性、准确性、一致性的度量与管控框架", tag: "必学", tc: "#059669", tb: "#ECFDF5" },
+        { text: "数据管理员（Data Stewardship）：角色职责定义与跨团队协作机制", tag: "必学", tc: "#059669", tb: "#ECFDF5" },
+        { text: "元数据管理（Metadata Management）：Hive Metastore 的技术元数据管理与业务元数据补充", tag: "必学", tc: "#059669", tb: "#ECFDF5" },
+        { text: "主数据管理（MDM）：黄金记录、实体解析与跨系统去重", tag: "进阶", tc: "#7C3AED", tb: "#F5F3FF" },
+        { text: "数据隐私与安全：GDPR / PDPA 合规、数据脱敏、Ranger 访问控制（RBAC）", tag: "必学", tc: "#059669", tb: "#ECFDF5" },
+        { text: "数据生命周期管理：Hive 分区归档策略、TTL 设置、数据清理与留存", tag: "推荐", tc: "#059669", tb: "#ECFDF5" },
+      ]},
+      { name: "Spark 性能调优（与治理强相关）", items: [
+        { text: "Shuffle 调优：理解 Shuffle 原理（Map / Reduce 阶段），调整 spark.sql.shuffle.partitions、开启 AQE（Adaptive Query Execution）自动调整分区数", tag: "必学", tc: "#059669", tb: "#ECFDF5" },
+        { text: "Shuffle 进阶：Sort Merge Join vs Broadcast Join 的选型，处理数据倾斜（Salting / Skew Join Hint）", tag: "必学", tc: "#059669", tb: "#ECFDF5" },
+        { text: "Gluten：基于 Velox / Arrow 的 Spark 原生执行加速插件，理解其替换 Spark JVM 执行引擎的原理与接入方式", tag: "必学", tc: "#059669", tb: "#ECFDF5" },
+        { text: "Native Vector（原生向量化执行）：列式内存格式（Arrow / Velox RowVector）、SIMD 加速原理，与 Gluten 的协同工作方式", tag: "必学", tc: "#059669", tb: "#ECFDF5" },
+        { text: "Spark + Hive 常见性能瓶颈排查：小文件合并、分区数过多、ORC 文件 Stripe 调优", tag: "进阶", tc: "#7C3AED", tb: "#F5F3FF" },
+      ]},
+      { name: "工具与框架", items: [
+        { text: "数据目录工具：Apache Atlas（与 Hive / Spark Hook 集成）或 DataHub 的基本使用", tag: "推荐", tc: "#059669", tb: "#ECFDF5" },
+        { text: "数据合同（Data Contract）概念与落地实施方式", tag: "进阶", tc: "#7C3AED", tb: "#F5F3FF" },
+        { text: "dbt + Spark adapter 或 Hive adapter 实现元数据自动化与模型文档生成", tag: "推荐", tc: "#059669", tb: "#ECFDF5" },
+      ]},
+    ]
+  },
+  {
+    id: "p4", icon: "🤖", color: "#7C3AED", bg: "#F5F3FF", barColor: "#7C3AED",
+    title: "Part 4 · 数据 + AI", sub: "Data & AI Integration（了解即可）",
+    cats: [
+      { name: "基础概念", items: [
+        { text: "特征工程与特征存储（Feature Store）的基本概念", tag: "了解", tc: "#7C3AED", tb: "#F5F3FF" },
+        { text: "LLM 在数据管道中的典型应用场景：SQL 生成、元数据补全、数据清洗辅助", tag: "了解", tc: "#7C3AED", tb: "#F5F3FF" },
+        { text: "向量数据库基本原理与 RAG 架构中数据工程的角色", tag: "加分", tc: "#D97706", tb: "#FFFBEB" },
+      ]},
+    ]
+  }
+];
+
+const STORAGE_KEY = "de_checklist_v1";
+let state = {};
+
+function load() {
+  try { state = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch { state = {}; }
+}
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function key(pid, cname, idx) { return `${pid}|${cname}|${idx}`; }
+
+function totalItems() {
+  return PARTS.reduce((a, p) => a + p.cats.reduce((b, c) => b + c.items.length, 0), 0);
+}
+function totalDone() { return Object.values(state).filter(Boolean).length; }
+
+function updateSummary() {
+  const done = totalDone(), total = totalItems(), pct = total ? Math.round(done / total * 100) : 0;
+  document.getElementById("s-done").textContent = done;
+  document.getElementById("s-total").textContent = total;
+  document.getElementById("s-pct").textContent = pct + "%";
+  document.getElementById("overall-fill").style.width = pct + "%";
+  document.getElementById("bar-pct-lbl").textContent = pct + "%";
+}
+
+function updatePartBar(pid) {
+  const part = PARTS.find(p => p.id === pid);
+  let total = 0, done = 0;
+  part.cats.forEach(c => c.items.forEach((_, i) => {
+    total++;
+    if (state[key(pid, c.name, i)]) done++;
+  }));
+  const pct = total ? Math.round(done / total * 100) : 0;
+  document.getElementById("mfill_" + pid).style.width = pct + "%";
+  document.getElementById("mpct_" + pid).textContent = done + " / " + total;
+}
+
+function toggleItem(pid, cname, idx) {
+  const k = key(pid, cname, idx);
+  state[k] = !state[k];
+  save();
+
+  const cb = document.getElementById("cb_" + k);
+  const txt = document.getElementById("tx_" + k);
+  const part = PARTS.find(p => p.id === pid);
+  if (state[k]) {
+    cb.classList.add("checked");
+    cb.style.background = part.color;
+    txt.classList.add("done");
+  } else {
+    cb.classList.remove("checked");
+    cb.style.background = "";
+    txt.classList.remove("done");
+  }
+  updatePartBar(pid);
+  updateSummary();
+}
+
+function resetAll() {
+  if (!confirm("确认重置所有学习进度？")) return;
+  state = {};
+  save();
+  document.querySelectorAll(".cb").forEach(cb => { cb.classList.remove("checked"); cb.style.background = ""; });
+  document.querySelectorAll(".item-text").forEach(t => t.classList.remove("done"));
+  PARTS.forEach(p => { updatePartBar(p.id); });
+  updateSummary();
+}
+
+function render() {
+  load();
+  const root = document.getElementById("root");
+  PARTS.forEach(part => {
+    const div = document.createElement("div");
+    div.className = "part";
+
+    // Header
+    const hdr = document.createElement("div");
+    hdr.className = "part-header";
+    hdr.setAttribute("role", "button");
+    hdr.setAttribute("aria-expanded", "false");
+    hdr.innerHTML = `
+      <div class="part-icon" style="background:${part.bg};">${part.icon}</div>
+      <div class="part-meta"><h2>${part.title}</h2><p>${part.sub}</p></div>
+      <div class="part-right">
+        <div class="mini-bar-track"><div class="mini-bar-fill" id="mfill_${part.id}" style="width:0%;background:${part.barColor};"></div></div>
+        <span class="mini-pct" id="mpct_${part.id}">0 / 0</span>
+        <span class="chevron" id="chev_${part.id}">▼</span>
+      </div>
+    `;
+
+    // Body
+    const body = document.createElement("div");
+    body.className = "part-body";
+    body.id = "body_" + part.id;
+
+    part.cats.forEach(cat => {
+      const lbl = document.createElement("div");
+      lbl.className = "category-label";
+      lbl.textContent = cat.name;
+      body.appendChild(lbl);
+
+      cat.items.forEach((item, i) => {
+        const k = key(part.id, cat.name, i);
+        const row = document.createElement("div");
+        row.className = "item";
+        row.setAttribute("role", "checkbox");
+        row.setAttribute("aria-checked", state[k] ? "true" : "false");
+        row.setAttribute("tabindex", "0");
+        row.innerHTML = `
+          <div class="cb${state[k] ? " checked" : ""}" id="cb_${k}" style="${state[k] ? "background:" + part.color + ";" : ""}">
+            <svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4L4 7.5L10 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span class="item-text${state[k] ? " done" : ""}" id="tx_${k}">${item.text}</span>
+          <span class="tag" style="color:${item.tc};background:${item.tb};">${item.tag}</span>
+        `;
+        const toggle = () => toggleItem(part.id, cat.name, i);
+        row.addEventListener("click", toggle);
+        row.addEventListener("keydown", e => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); toggle(); } });
+        body.appendChild(row);
+      });
+    });
+
+    hdr.addEventListener("click", () => {
+      const open = body.classList.toggle("open");
+      document.getElementById("chev_" + part.id).classList.toggle("open", open);
+      hdr.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+
+    div.appendChild(hdr);
+    div.appendChild(body);
+    root.appendChild(div);
+
+    updatePartBar(part.id);
+  });
+
+  updateSummary();
+}
+
+render();
+</script>
+</body>
+</html>
