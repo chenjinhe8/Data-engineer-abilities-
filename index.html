@@ -139,25 +139,26 @@ const PARTS = [
     title: "Part 1 · 数据建模", sub: "Data Modeling",
     cats: [
       { name: "Schema 设计", items: [
+        { text: "三层 Schema 架构：概念层（ER 图 + 业务定义）→ 逻辑层（业务语言转数据库语言）→ 物理层（存储优化）", tag: "必学", tc: "#4B6BFB", tb: "#EEF2FF" },
         { text: "星型模式（Star Schema）：事实表与维度表的设计原则", tag: "必学", tc: "#4B6BFB", tb: "#EEF2FF" },
         { text: "雪花模式（Snowflake Schema）：维度规范化及适用场景", tag: "必学", tc: "#4B6BFB", tb: "#EEF2FF" },
+        { text: "宽表模型（Flat Table / Wide Table Schema）：反范式设计与 BI 场景应用", tag: "进阶", tc: "#7C3AED", tb: "#F5F3FF" },
+        { text: "数据拱顶模型（Data Vault Schema）：Hub-Link-Satellite 结构与可扩展数仓设计", tag: "进阶", tc: "#7C3AED", tb: "#F5F3FF" },
         { text: "范式（1NF / 2NF / 3NF）vs 反范式：何时选择哪种策略", tag: "必学", tc: "#4B6BFB", tb: "#EEF2FF" },
-        { text: "Wide table / Flat table 的 BI 场景应用", tag: "进阶", tc: "#7C3AED", tb: "#F5F3FF" },
       ]},
       { name: "数据分层与 SSOT", items: [
         { text: "数仓分层理念：ODS → DWD → DWS → ADS，以及 Medallion（Bronze / Silver / Gold）架构", tag: "必学", tc: "#4B6BFB", tb: "#EEF2FF" },
+        { text: "全量表（df）与增量表（di）：同步策略选型与实现原理", tag: "必学", tc: "#4B6BFB", tb: "#EEF2FF" },
         { text: "SSOT（单一真相来源）的设计原则与落地实践", tag: "必学", tc: "#4B6BFB", tb: "#EEF2FF" },
         { text: "缓慢变化维（SCD Type 1 / 2 / 3）的建模方式与选型", tag: "必学", tc: "#4B6BFB", tb: "#EEF2FF" },
         { text: "数据域划分与业务主题建模（Subject Area）", tag: "进阶", tc: "#7C3AED", tb: "#F5F3FF" },
       ]},
       { name: "工具与文档", items: [
-        { text: "dbt：模型开发、测试、文档生成一体化工作流", tag: "必学", tc: "#4B6BFB", tb: "#EEF2FF" },
         { text: "ERD 图工具（dbdiagram.io / Lucidchart）绘制数据模型", tag: "推荐", tc: "#059669", tb: "#ECFDF5" },
         { text: "数据字典的编写规范与维护方式", tag: "推荐", tc: "#059669", tb: "#ECFDF5" },
       ]},
     ]
-  },
-  {
+  }{
     id: "p2", icon: "🔄", color: "#0891B2", bg: "#ECFEFF", barColor: "#0891B2",
     title: "Part 2 · ETL 与数据管道", sub: "ETL & Pipeline Management（Spark + Hive 技术栈）",
     cats: [
