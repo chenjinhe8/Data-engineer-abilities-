@@ -161,24 +161,26 @@ const PARTS = [
   },
   {
     id: "p2", icon: "🔄", color: "#0891B2", bg: "#ECFEFF", barColor: "#0891B2",
-    title: "Part 2 · ETL 与数据管道", sub: "ETL & Pipeline Management（Spark + Hive 技术栈）",
+    title: "Part 2 · ETL 与数据管道", sub: "ETL & Pipeline Management（Spark 4.x + Hive 4.x + Kafka 4.x）",
     cats: [
       { name: "批处理（Batch）— Spark + Hive", items: [
-        { text: "HiveQL 批量抽取与加载：INSERT OVERWRITE、MERGE INTO（Hive 3.x）策略", tag: "必学", tc: "#0891B2", tb: "#ECFEFF" },
+        { text: "HiveQL 批量抽取与加载：INSERT OVERWRITE、MERGE INTO（Hive 4.x）策略", tag: "必学", tc: "#0891B2", tb: "#ECFEFF" },
         { text: "增量抽取：基于时间戳、Hive 分区裁剪、CDC（Change Data Capture）与 Watermark 机制", tag: "必学", tc: "#0891B2", tb: "#ECFEFF" },
-        { text: "Spark on Hive：SparkSession 对接 Hive Metastore、读写 Hive 表、分区操作", tag: "必学", tc: "#0891B2", tb: "#ECFEFF" },
-        { text: "Hive 存储格式选型：ORC vs Parquet，压缩编码（Snappy / ZSTD）与列式存储原理", tag: "必学", tc: "#0891B2", tb: "#ECFEFF" },
-        { text: "调度工具：Apache Airflow 的 DAG 编写、依赖管理、SparkSubmitOperator 使用", tag: "必学", tc: "#0891B2", tb: "#ECFEFF" },
+        { text: "Spark on Hive：SparkSession 对接 Hive Metastore（Hive 4.x）、读写 Hive / Iceberg 表、分区操作", tag: "必学", tc: "#0891B2", tb: "#ECFEFF" },
+        { text: "Hive 存储格式选型：ORC vs Parquet vs Iceberg，压缩编码（Snappy / ZSTD）与列式存储原理", tag: "必学", tc: "#0891B2", tb: "#ECFEFF" },
+        { text: "调度工具：Apache Airflow 3.x 的 DAG 编写（Task SDK / airflow.sdk）、依赖管理、SparkSubmitOperator 使用", tag: "必学", tc: "#0891B2", tb: "#ECFEFF" },
+        { text: "Apache Iceberg 集成：Hive 4.x StorageHandler、Deletion Vectors、Z-ordering 与 REST Catalog 支持", tag: "进阶", tc: "#7C3AED", tb: "#F5F3FF" },
       ]},
       { name: "流处理（Streaming）", items: [
-        { text: "消息队列：Kafka 的生产者 / 消费者模型、Topic 分区、Offset 管理", tag: "必学", tc: "#0891B2", tb: "#ECFEFF" },
-        { text: "Spark Structured Streaming：读取 Kafka 流写入 Hive / ORC，Watermark 与窗口函数", tag: "进阶", tc: "#7C3AED", tb: "#F5F3FF" },
-        { text: "Exactly-once / At-least-once 语义的理解与在 Spark + Kafka 场景下的应用", tag: "进阶", tc: "#7C3AED", tb: "#F5F3FF" },
+        { text: "Kafka 4.x 消息队列：生产者 / 消费者模型、Topic 分区、Offset 管理与 KRaft 模式（无 ZooKeeper）", tag: "必学", tc: "#0891B2", tb: "#ECFEFF" },
+        { text: "Spark 4.x Structured Streaming：读取 Kafka 写入 Iceberg / ORC，Watermark 与窗口函数", tag: "进阶", tc: "#7C3AED", tb: "#F5F3FF" },
+        { text: "Exactly-once / At-least-once 语义的理解与在 Spark 4.x + Kafka 4.x 场景下的应用", tag: "进阶", tc: "#7C3AED", tb: "#F5F3FF" },
       ]},
       { name: "数据质量与排查", items: [
-        { text: "数据血缘（Data Lineage）追踪：Apache Atlas 与 Hive Hook 集成", tag: "必学", tc: "#0891B2", tb: "#ECFEFF" },
-        { text: "管道监控与告警：SLA 监控、Spark History Server、异常检测与补数策略", tag: "必学", tc: "#0891B2", tb: "#ECFEFF" },
+        { text: "数据血缘（Data Lineage）追踪：Apache Atlas 2.5 与 Hive Hook / OpenLineage 集成", tag: "必学", tc: "#0891B2", tb: "#ECFEFF" },
+        { text: "管道监控与告警：SLA 监控、Spark History Server、Spark Connect 远程调试与异常检测补数策略", tag: "必学", tc: "#0891B2", tb: "#ECFEFF" },
         { text: "分布式系统下的数据一致性：幂等性设计、去重、跨数据中心迁移策略", tag: "加分", tc: "#D97706", tb: "#FFFBEB" },
+        { text: "Spark 4.x Declarative Pipelines（声明式管道）：多表 ETL 管道构建与自动增量刷新", tag: "加分", tc: "#D97706", tb: "#FFFBEB" },
       ]},
     ]
   },
